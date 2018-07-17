@@ -16,15 +16,7 @@
 
     <context:component-scan base-package="ma.kriauto.rest.dao"/>
     <context:component-scan base-package="ma.kriauto.rest.service"/>
-    <context:component-scan base-package="ma.kriauto.rest.util"/>
     <context:component-scan base-package="ma.kriauto.rest.batch" />
-    
-    <!--  <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="org.postgresql.Driver" />
-        <property name="url" value="jdbc:postgresql://192.168.252.130:5432/kriauto" />
-		<property name="username" value="postgres" />
-		<property name="password" value="admin" /> 
-	</bean> -->
 	
 	<jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/datasources/kriauto" />
 	

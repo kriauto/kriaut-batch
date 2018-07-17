@@ -20,9 +20,12 @@ import ma.kriauto.rest.service.ProfileService;
 import ma.kriauto.rest.service.SenderService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
  
 @Configuration
 @EnableScheduling
@@ -39,6 +42,11 @@ public class SpringEnableSchedulingExample {
 	
 	@Autowired
 	SenderService senderservice;
+	
+	@Bean
+	public TaskScheduler taskScheduler() {
+	    return new ConcurrentTaskScheduler(); //single threaded by default
+	}
 	
 	/**** Empting kilometre * @throws ParseException ***/
 	@Scheduled(cron = "00 00 01 * * *")
@@ -84,7 +92,7 @@ public class SpringEnableSchedulingExample {
     		   List<Car> cars = carservice.getAllCarsByProfile(profile.getLogin());
     		   for(int j=0; j<cars.size(); j++){
     			   Car car = cars.get(j);
-    			   if(null != car && null != car.getTechnicalcontroldate() && true == car.getNotiftechnicalcontroldate()){
+    			   if(null != car && null != car.getTechnicalcontroldate() && null != car.getNotiftechnicalcontroldate() && true == car.getNotiftechnicalcontroldate()){
 						try {
 							 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE);
 							 Date now = new Date();
@@ -160,7 +168,7 @@ public class SpringEnableSchedulingExample {
     		   List<Car> cars = carservice.getAllCarsByProfile(profile.getLogin());
     		   for(int j=0; j<cars.size(); j++){
     			   Car car = cars.get(j);
-    			   if(null != car && null != car.getInsuranceenddate() && true == car.getNotifinsuranceenddate()){
+    			   if(null != car && null != car.getInsuranceenddate() && null != car.getNotifinsuranceenddate() && true == car.getNotifinsuranceenddate()){
 						try {
 							 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE);
 							 Date now = new Date();
@@ -201,7 +209,7 @@ public class SpringEnableSchedulingExample {
     		   List<Car> cars = carservice.getAllCarsByProfile(profile.getLogin());
     		   for(int j=0; j<cars.size(); j++){
     			   Car car = cars.get(j);
-    			   if(null != car && null != car.getAutorisationcirculationenddate() && true == car.getNotifautorisationcirculationenddate()){
+    			   if(null != car && null != car.getAutorisationcirculationenddate() && null != car.getNotifautorisationcirculationenddate() && true == car.getNotifautorisationcirculationenddate()){
 						try {
 							 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE);
 							 Date now = new Date();
@@ -242,7 +250,7 @@ public class SpringEnableSchedulingExample {
     		   List<Car> cars = carservice.getAllCarsByProfile(profile.getLogin());
     		   for(int j=0; j<cars.size(); j++){
     			   Car car = cars.get(j);
-    			   if(null != car && null != car.getMaxspeed() && true == car.getNotifmaxspeed()){
+    			   if(null != car && null != car.getMaxspeed() && null != car.getNotifmaxspeed() && true == car.getNotifmaxspeed()){
 							 Calendar calendar = Calendar.getInstance();
 						     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH24:MM:SS");
 						     calendar.add(Calendar.MINUTE, -60);
@@ -277,7 +285,7 @@ public class SpringEnableSchedulingExample {
     		   List<Car> cars = carservice.getAllCarsByProfile(profile.getLogin());
     		   for(int j=0; j<cars.size(); j++){
     			   Car car = cars.get(j);
-    			   if(null != car && null != car.getMaxcourse() && true == car.getNotifmaxcourse() && null != profile && null != profile.getToken()){
+    			   if(null != car && null != car.getMaxcourse() && null != car.getNotifmaxcourse() && true == car.getNotifmaxcourse() && null != profile && null != profile.getToken()){
 							 Calendar calendar = Calendar.getInstance();
 						     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 						     //calendar.add(Calendar.DATE, -35);
