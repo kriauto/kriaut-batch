@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<div ng-controller="DashboardController">
+	 <div class="row">
+			<div class="col-sm-6">
+			  <div class="panel panel-primary filterable">
+            <div class="panel-heading">
+                <h3 class="panel-title">Distance/Jour</h3>
+                <div class="pull-right">
+                    <select id="style-selector" ng-selected="$first" class="selector-control" ng-model="car.deviceid1" ng-change="ajaxtotalcourse()">
+                      <option value="">Voiture</option>
+                      <option ng-repeat="car in cars" value="{{car.deviceid}}">{{car.immatriculation}}</option>
+                    </select>
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr class="filters">
+                        <th style="width:50%">Date</th>
+                        <th style="width:50%">Total Distance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="total in totalcours">
+                        <td>{{total.day}}</td>
+                        <td>{{total.totalCourse | number:2}} Km</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-sm-6">
+			  <div class="panel panel-primary filterable">
+            <div class="panel-heading">
+                <h3 class="panel-title">Vitesse Maximale/Jour</h3>
+                <div class="pull-right">
+                   <select id="style-selector" ng-selected="$first" class="selector-control" ng-model="car.deviceid2" ng-change="ajaxmaxspeed()">
+                      <option value="">Voiture</option>
+                      <option ng-repeat="car in cars" value="{{car.deviceid}}">{{car.immatriculation}}</option>
+                    </select>
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr class="filters">
+                        <th style="width:50%">Date</th>
+                        <th style="width:50%">Vitesse Maximale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="speed in maxspeed">
+                        <td>{{speed.day}}</td>
+                        <td>{{speed.maxSpeed | number:0}} Km/h</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-sm-6">
+			  <div class="panel panel-primary filterable">
+            <div class="panel-heading">
+                <h3 class="panel-title">Consommation/Jour</h3>
+                <div class="pull-right">
+                    <select id="style-selector" ng-selected="$first" class="selector-control" ng-model="car.deviceid3" ng-change="ajaxtotalconsumption()">
+                      <option value="">Voiture</option>
+                      <option ng-repeat="car in cars" value="{{car.deviceid}}">{{car.immatriculation}}</option>
+                    </select>
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr class="filters">
+                        <th style="width:50%">Date</th>
+                        <th style="width:50%">Consommation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="consumption in consumption">
+                        <td>{{consumption.day}}</td>
+                        <td>{{consumption.consumption | number:2}} L</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-sm-6">
+			  <div class="panel panel-primary filterable">
+            <div class="panel-heading">
+                <h3 class="panel-title">Notifications</h3>
+                <div class="pull-right">
+                    <select id="style-selector" ng-selected="$first" class="selector-control" ng-model="car.deviceid4" ng-change="ajaxnotification()">
+                      <option value="">Voiture</option>
+                      <option ng-repeat="car in cars" value="{{car.deviceid}}">{{car.immatriculation}}</option>
+                    </select>
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr class="filters">
+                        <th style="width:30%">Date</th>
+                        <th style="width:70%">Meassge</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="notification in notification">
+                        <td>{{notification.creationdate}}</td>
+                        <td>{{notification.texte}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+		</div>
+	</div>
+</body>
+</html>

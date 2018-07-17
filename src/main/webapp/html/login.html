@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<meta charset="UTF-8" />
+<title>Titre de votre page</title>
+</head>
+
+<body>
+	<div ng-controller="LoginController">
+		<div id="loginbox" style="margin-top: 10px;"
+			class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+			<div class="panel panel-info">
+				<!-- Form head -->
+				<div class="panel-heading">
+					<div class="panel-title">Connexion</div>
+					<div
+						style="float: right; font-size: 80%; position: relative; top: -10px">
+						<a href="#!/initPassword">Mot de passe oubli&egrave; ?</a>
+					</div>
+				</div>
+				<!--  -->
+
+				<!-- alert div -->
+				<div ng-class="'alert alert-'+message().type"
+					ng-show="message().show">
+					<button type="button" class="close" ng-click="message().show=false">×</button>
+					<msg key-expr="message().code"></msg>
+				</div>
+				<!--  -->
+
+
+
+				<!-- Form body -->
+				<div class="panel-body">
+					<form id="loginform" class="form-horizontal" role="form">
+						<div style="margin-bottom: 10px" class="input-group">
+							<span class="input-group-addon"><i
+								class="glyphicon glyphicon-user"></i></span> <input type="text"
+								ng-model="profile.login" class="form-control"
+								placeholder="Identifiant">
+						</div>
+						<div style="margin-bottom: 10px" class="input-group">
+							<span class="input-group-addon"><i
+								class="glyphicon glyphicon-lock"></i></span> <input type="password"
+								ng-model="profile.password" class="form-control"
+								placeholder="Mot de passe">
+						</div>
+						<div style="margin-bottom: 10px" id="remember" class="checkbox">
+							<label> <input type="checkbox"  ng-model="profile.remember">
+								Se souvenir de moi
+							</label>
+						</div>
+						<button type="button" class="btn btn-primary btn-block"
+							ng-click="login()">Connexion</button>
+					</form>
+				</div>
+				<!--  -->
+			</div>
+		</div>
+	</div>
+</body>
+</html>

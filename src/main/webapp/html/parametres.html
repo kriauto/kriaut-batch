@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+    <!-- alert div -->
+				<div ng-class="'alert alert-'+message().type"
+					ng-show="message().show">
+					<button type="button" class="close" ng-click="message().show=false">×</button>
+					<msg key-expr="message().code"></msg>
+				</div>
+				<!--  -->
+	<div ng-controller="ParametresController">
+	 <div class="row">
+		<div class="col-sm-6">
+		  <div class="panel panel-primary filterable">
+            <div class="panel-heading">
+                <h3 class="panel-title">Arret/Dèmarrage</h3>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr class="filters">
+                        <th style="width:33%">Immatriculation</th>
+                        <th style="width:33%">Stutut</th>
+                        <th style="width:33%">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="car in cars">
+                        <td>{{car.immatriculation}}</td>
+                        <td ng-show="car.status == 0">En Marche</td>
+                        <td ng-show="car.status == 1">En Arret</td>
+                        <td ng-show="car.status == 2">Arret Encours</td>
+                        <td ng-show="car.status == 3">Démarrage Encours</td>
+                        <td ng-show="car.status == 0 || car.status == 3"><img style="width:20px;height:20px;margin-top:0px;margin-bttom:0px;"   src="img/stop.png" alt="Arreter" ng-click="ajaxstopcar(car.deviceid)"></img></td>
+                        <td ng-show="car.status == 1 || car.status == 2"><img style="width:20px;height:20px;margin-top:0px;margin-bttom:0px;"   src="img/start.png" alt="Dèmarrer" ng-click="ajaxstartcar(car.deviceid)"></img></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+	  <div class="col-sm-6">
+	     <div class="panel panel-primary filterable">
+            <div class="panel-heading">
+                <h3 class="panel-title">Barrière Virtuelle</h3>
+                <div class="pull-right">
+                    <select id="style-selector" ng-selected="$first" class="selector-control" ng-model="car.deviceid5" ng-change="ajaxgeofencecar()">
+                      <option value="">Voiture</option>
+                      <option ng-repeat="car in cars" value="{{car.deviceid}}">{{car.immatriculation}}</option>
+                    </select>
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr class="filters">
+                        <th style="width:20%">Order</th>
+                        <th colspan="4" style="width:80%">Cordoonnées</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <div ng-show="false">
+					    <input type="text" id="id"  ng-model="geofence.id">
+			        </div>
+                    <tr>
+                        <td>1</td>
+                        <td class="filters">Latitude</td>
+                        <td><input type="text"  style="width:80%" ng-model="geofence.latitude1"></td>
+                        <td class="filters">Logitude</td>
+                        <td><input type="text"  style="width:80%" ng-model="geofence.longitude1"></td>
+                    </tr>
+                     <tr>
+                        <td>2</td>
+                        <td class="filters">Latitude</td>
+                        <td><input type="text"  style="width:80%" ng-model="geofence.latitude2"></td>
+                        <td class="filters">Logitude</td>
+                        <td><input type="text"  style="width:80%" ng-model="geofence.longitude2"></td>
+                    </tr>
+                     <tr>
+                        <td>3</td>
+                        <td class="filters">Latitude</td>
+                        <td><input type="text"  style="width:80%" ng-model="geofence.latitude3"></td>
+                        <td class="filters">Logitude</td>
+                        <td><input type="text"  style="width:80%" ng-model="geofence.longitude3"></td>
+                    </tr>
+                     <tr>
+                        <td>4</td>
+                        <td class="filters">Latitude</td>
+                        <td><input type="text"  style="width:80%" ng-model="geofence.latitude4"></td>
+                        <td class="filters">Logitude</td>
+                        <td><input type="text"  style="width:80%" ng-model="geofence.longitude4"></td>
+                    </tr>
+                     <tr>
+                        <td>5</td>
+                        <td class="filters">Latitude</td>
+                        <td><input type="text"  style="width:80%" ng-model="geofence.latitude5"></td>
+                        <td class="filters">Logitude</td>
+                        <td><input type="text"  style="width:80%" ng-model="geofence.longitude5"></td>
+                    </tr>
+                     <tr>
+                        <td>6</td>
+                        <td class="filters">Latitude</td>
+                        <td><input type="text"  style="width:80%" ng-model="geofence.latitude6"></td>
+                        <td class="filters">Logitude</td>
+                        <td><input type="text"  style="width:80%" ng-model="geofence.longitude6"></td>
+                    </tr>
+                     <tr>
+                        <td colspan="5">
+                         <button type="button" class="btn btn-primary btn-block"
+							ng-click="ajaxupdatecar()">Envoyer</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+   </div>
+  </div>
+</body>
+</html>

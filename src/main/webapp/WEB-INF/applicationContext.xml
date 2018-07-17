@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:sec="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.1.xsd
+        http://www.springframework.org/schema/jee 
+        http://www.springframework.org/schema/jee/spring-jee-4.1.xsd 
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security-4.1.xsd">
+
+    <context:component-scan base-package="ma.kriauto.rest.dao"/>
+    <context:component-scan base-package="ma.kriauto.rest.service"/>
+    <context:component-scan base-package="ma.kriauto.rest.util"/>
+    <context:component-scan base-package="ma.kriauto.rest.batch" />
+    
+    <!--  <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.postgresql.Driver" />
+        <property name="url" value="jdbc:postgresql://192.168.252.130:5432/kriauto" />
+		<property name="username" value="postgres" />
+		<property name="password" value="admin" /> 
+	</bean> -->
+	
+	<jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/datasources/kriauto" />
+	
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">        
+	
+       <property name="dataSource" ref="dataSource"></property>  
+    </bean>
+</beans>
