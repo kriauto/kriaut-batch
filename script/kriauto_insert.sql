@@ -149,3 +149,12 @@ values (38,'gt06',512462,'2018-01-25 08:17:00.00' ,'2017-11-29 08:17:00','2017-1
 insert into positions (id,protocol,deviceid,servertime,devicetime,fixtime,valid,latitude,longitude,altitude,speed,course,address,attributes,accuracy,network) 
 values (39,'gt06',512462,'2018-01-25 08:18:00.00' ,'2017-11-29 08:18:00','2017-11-29 08:18:00',true,33.994325, -6.8485360,0
 ,30,452,'','',0,'');
+
+
+update car set latitude1='36.075559',longitude1='-7.492703',latitude2='36.376890',longitude2='-1.010775',latitude3='31.905359',longitude3='-0.175819',latitude4='21.197021',longitude4='-12.436567',latitude5='20.612029',longitude5='-17.413379',latitude6='32.063787',longitude6='-13.524224';
+
+
+update car set enable=false,technicalcontroldate='2018-07-30',emptyingkilometre=10000,insuranceenddate='2018-07-30',maxspeed=60,maxcourse=80;
+
+
+update car set notiftechnicalcontroldate=true,notifemptyingkilometre=true,notifinsuranceenddate=true,notifmaxspeed=true,notifmaxcourse=true,notifminlevelfuel=false,notifmaxenginetemperature=false,notifminfridgetemperature=false,notifmaxfridgetemperature=false,notifautorisationcirculationenddate=false,notifinzone=true,notifoutzone=true,inzone=true;

@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import ma.kriauto.rest.domain.Car;
+import ma.kriauto.rest.domain.Location;
 import ma.kriauto.rest.domain.Notification;
 import ma.kriauto.rest.domain.Profile;
 import ma.kriauto.rest.domain.Speed;
@@ -273,6 +274,88 @@ public class SpringEnableSchedulingExample {
        }
     }
 	
+	/**** exit zone Notifications ***/
+//	@Scheduled(fixedDelay = 3600000)
+//    public void exitzoneNotifications() throws IOException {
+//       List<Profile> profiles = profileservice.getAllProfiles();
+//       for(int i=0; i < profiles.size(); i++){
+//    	   Profile profile = profiles.get(i);
+//    	   System.out.println("Profile --> " + profile);
+//    	   if(null != profile && null != profile.getLogin()){
+//    		   List<Notification> notifications = notificationservice.getPushTokenByProfile(profile.getLogin());
+//    		   List<Car> cars = carservice.getAllCarsByProfile(profile.getLogin());
+//    		   for(int j=0; j<cars.size(); j++){
+//    			   Car car = cars.get(j);
+//    			   if(null != car && null != car.getMaxspeed() && null != car.getNotifmaxspeed() && true == car.getNotifmaxspeed()){
+//							 Calendar calendar = Calendar.getInstance();
+//						     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH24:MM:SS");
+//						     calendar.add(Calendar.MINUTE, -60);
+//	                         String date = sdf.format(calendar.getTime());
+//	                         List<Location> locations = carservice.getAllLocationByCarTime(car.getDeviceid(), date);
+//	                 	     for(int k=0 ; k<locations.size() ; k++){
+//	                 		   Location location = locations.get(k);
+//	                 		   if(isInCeuta(location.getLatitude(), location.getLongitude())){
+//	                 			  String message = "Sortie de territoire : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+//			    					 for(int v=0; v<notifications.size(); v++){
+//			    					   Notification notification = notifications.get(v);
+//			    					   if(null != notification && null != notification.getPushnotiftoken()){
+//			    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
+//			    					   }
+//			    					 }
+//			    					 Notification notif = new Notification(car.getDeviceid().toString(), message);
+//			    					 notificationservice.addNotification(notif);
+//	                     		break;
+//	                 		}
+//	                 		if(isInMelilea(location.getLatitude(), location.getLongitude())){
+//	                 			String message = "La"+notif.getMark()+notif.getModel()+notif.getColor()+notif.getImmatriculation()+"est+a+melilia";
+//	                 			senderservice.sendSms("KriAuto.ma", notif.getPhone(), message);
+//	                     		Car car = carservice.getCarByDevice(notif.getDeviceid());
+//	                     		car.setIsnotifdefaultgeofence(true);
+//	                     		carservice.updateCar(car);
+//	                     		notif.setTexte(message);
+//	                     		notificationservice.addNotification(notif);
+//	                     		System.out.println(message);
+//	                     		break;
+//	                 		}
+//	                 		if(isInAlgerie(location.getLatitude(), location.getLongitude())){
+//	                 			String message = "La"+notif.getMark()+notif.getModel()+notif.getColor()+notif.getImmatriculation()+"est+en+algerie";
+//	                 			senderservice.sendSms("KriAuto.ma", notif.getPhone(), message);
+//	                     		Car car = carservice.getCarByDevice(notif.getDeviceid());
+//	                     		car.setIsnotifdefaultgeofence(true);
+//	                     		carservice.updateCar(car);
+//	                     		notif.setTexte(message);
+//	                     		notificationservice.addNotification(notif);
+//	                     		System.out.println(message);
+//	                     		break;
+//	                 		}
+//	                 		if(isInMauritanie(location.getLatitude(), location.getLongitude())){
+//	                 			String message = "La"+notif.getMark()+notif.getModel()+notif.getColor()+notif.getImmatriculation()+"est+en+mauritanie";
+//	                 			senderservice.sendSms("KriAuto.ma", notif.getPhone(), message);
+//	                     		Car car = carservice.getCarByDevice(notif.getDeviceid());
+//	                     		car.setIsnotifdefaultgeofence(true);
+//	                     		carservice.updateCar(car);
+//	                     		notif.setTexte(message);
+//	                     		notificationservice.addNotification(notif);
+//	                     		System.out.println(message);
+//	                     		break;
+//	                 		}
+//		    				 if(null != speed && Double.valueOf(speed.getMaxSpeed()) > car.getMaxspeed()){
+//		    					 String message = "La vitesse journalière maximale autorisée ("+car.getMaxspeed()+") est dépassée pour la voiture : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+//		    					 for(int k=0; k<notifications.size(); k++){
+//		    					   Notification notification = notifications.get(k);
+//		    					   if(null != notification && null != notification.getPushnotiftoken()){
+//		    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
+//		    					   }
+//		    					 }
+//		    					 Notification notif = new Notification(car.getDeviceid().toString(), message);
+//		    					 notificationservice.addNotification(notif);
+//		    				}
+//    			   }
+//    		   }
+//    	   }
+//       }
+//    }
+	
 	/**** Max course Notifications ***/
 	@Scheduled(cron = "00 00 23 * * *")
     public void maxcourseNotifications() throws IOException {
@@ -436,100 +519,100 @@ public class SpringEnableSchedulingExample {
 ////        System.out.println("End Init GeFence " + new Date());
 ////    }
 ////	
-////	public boolean isInZone(Notification notif, double lat, double lon) {
-////		int j=0;
-////        boolean inBound = false;
-////        double x = lon;
-////        double y = lat;
-////        if(null != notif.getLatitude1() && null != notif.getLongitude1() && null != notif.getLatitude2() && null != notif.getLongitude2() && null != notif.getLatitude3() && null != notif.getLongitude3() && null != notif.getLatitude4() && null != notif.getLongitude4() && null != notif.getLatitude5() && null != notif.getLongitude5() && null != notif.getLatitude6() && null != notif.getLongitude6()){
-////         double zone[][]  = {{notif.getLatitude1(),notif.getLongitude1()},{notif.getLatitude2(),notif.getLongitude2()},{notif.getLatitude3(),notif.getLongitude3()},{notif.getLatitude4(),notif.getLongitude4()},{notif.getLatitude5(),notif.getLongitude5()},{notif.getLatitude6(),notif.getLongitude6()}};
-////         for (int i=0; i < 4 ; i++) {
-////          j++;
-////          if (j == 4) {j = 0;}
-////          if (((zone[i][0] < y) && (zone[j][0]  >= y)) || ((zone[j][0] < y) && (zone[i][0] >= y))) {
-////            if ( zone[i][1] + (y - zone[i][0])/(zone[j][0]-zone[i][0])*(zone[j][1] - zone[i][1])<x ) 
-////               {
-////            	inBound = !inBound;
-////               }
-////            }
-////         } 
-////        }
-////	    return inBound;
-////	}
-////	
-////	public boolean isInCeuta(double lat, double lon) {
-////		int j=0;
-////        boolean inBound = false;
-////        double x = lon;
-////        double y = lat;
-////        double ceuta[][]  = {{35.912663,-5.382453},{35.896116,-5.378333},{35.880818,-5.371639},{35.868856,-5.344344},{35.899315,-5.261947},{35.933793,-5.379192}};
-////        for (int i=0; i < 4 ; i++) {
-////          j++;
-////          if (j == 4) {j = 0;}
-////          if (((ceuta[i][0] < y) && (ceuta[j][0]  >= y)) || ((ceuta[j][0] < y) && (ceuta[i][0] >= y))) {
-////            if ( ceuta[i][1] + (y - ceuta[i][0])/(ceuta[j][0]-ceuta[i][0])*(ceuta[j][1] - ceuta[i][1])<x ) 
-////               {
-////            	inBound = !inBound;
-////               }
-////            }
-////        }
-////	    return inBound;
-////	}
-////	
-////	public boolean isInMauritanie(double lat, double lon) {
-////		int j=0;
-////        boolean inBound = false;
-////        double x = lon;
-////        double y = lat;
-////        double ceuta[][]  = {{21.333039,-13.014105},{21.333039,-16.940144},{20.784382,-17.064262},{21.284352,-16.914014},{21.284352,-13.014105}};
-////        for (int i=0; i < 4 ; i++) {
-////          j++;
-////          if (j == 4) {j = 0;}
-////          if (((ceuta[i][0] < y) && (ceuta[j][0]  >= y)) || ((ceuta[j][0] < y) && (ceuta[i][0] >= y))) {
-////            if ( ceuta[i][1] + (y - ceuta[i][0])/(ceuta[j][0]-ceuta[i][0])*(ceuta[j][1] - ceuta[i][1])<x ) 
-////               {
-////            	inBound = !inBound;
-////               }
-////            }
-////        }
-////	    return inBound;
-////	}
-////	
-////	public boolean isInMelilea(double lat, double lon) {
-////		int j=0;
-////        boolean inBound = false;
-////        double x = lon;
-////        double y = lat;
-////        double ceuta[][]  = {{35.319974,-2.952852},{35.316266,-2.960067},{35.288948,-2.970539},{35.265965,-2.950454},{35.271992,-2.929511},{35.295818,-2.913552}};
-////        for (int i=0; i < 4 ; i++) {
-////          j++;
-////          if (j == 4) {j = 0;}
-////          if (((ceuta[i][0] < y) && (ceuta[j][0]  >= y)) || ((ceuta[j][0] < y) && (ceuta[i][0] >= y))) {
-////            if ( ceuta[i][1] + (y - ceuta[i][0])/(ceuta[j][0]-ceuta[i][0])*(ceuta[j][1] - ceuta[i][1])<x ) 
-////               {
-////            	inBound = !inBound;
-////               }
-////            }
-////        }
-////	    return inBound;
-////	}
-////	
-////	public boolean isInAlgerie(double lat, double lon) {
-////		int j=0;
-////        boolean inBound = false;
-////        double x = lon;
-////        double y = lat;
-////        double ceuta[][]  = {{34.936012,-1.973600},{34.879471,-1.972144},{34.842021,-1.893973},{34.806529,-1.888122},{34.802300,-1.859627},{34.743703,-1.739356},{34.855287, -1.860319}};
-////        for (int i=0; i < 4 ; i++) {
-////          j++;
-////          if (j == 4) {j = 0;}
-////          if (((ceuta[i][0] < y) && (ceuta[j][0]  >= y)) || ((ceuta[j][0] < y) && (ceuta[i][0] >= y))) {
-////            if ( ceuta[i][1] + (y - ceuta[i][0])/(ceuta[j][0]-ceuta[i][0])*(ceuta[j][1] - ceuta[i][1])<x ) 
-////               {
-////            	inBound = !inBound;
-////               }
-////            }
-////        }
-////	    return inBound;
-////	}
+	public boolean isInZone(Car car, double lat, double lon) {
+		int j=0;
+        boolean inBound = false;
+        double x = lon;
+        double y = lat;
+        if(null != car.getLatitude1() && null != car.getLongitude1() && null != car.getLatitude2() && null != car.getLongitude2() && null != car.getLatitude3() && null != car.getLongitude3() && null != car.getLatitude4() && null != car.getLongitude4() && null != car.getLatitude5() && null != car.getLongitude5() && null != car.getLatitude6() && null != car.getLongitude6()){
+         double zone[][]  = {{car.getLatitude1(),car.getLongitude1()},{car.getLatitude2(),car.getLongitude2()},{car.getLatitude3(),car.getLongitude3()},{car.getLatitude4(),car.getLongitude4()},{car.getLatitude5(),car.getLongitude5()},{car.getLatitude6(),car.getLongitude6()}};
+         for (int i=0; i < 4 ; i++) {
+          j++;
+          if (j == 4) {j = 0;}
+          if (((zone[i][0] < y) && (zone[j][0]  >= y)) || ((zone[j][0] < y) && (zone[i][0] >= y))) {
+            if ( zone[i][1] + (y - zone[i][0])/(zone[j][0]-zone[i][0])*(zone[j][1] - zone[i][1])<x ) 
+               {
+            	inBound = !inBound;
+               }
+            }
+         } 
+        }
+	    return inBound;
+	}
+	
+	public boolean isInCeuta(double lat, double lon) {
+		int j=0;
+        boolean inBound = false;
+        double x = lon;
+        double y = lat;
+        double ceuta[][]  = {{35.912663,-5.382453},{35.896116,-5.378333},{35.880818,-5.371639},{35.868856,-5.344344},{35.899315,-5.261947},{35.933793,-5.379192}};
+        for (int i=0; i < 4 ; i++) {
+          j++;
+          if (j == 4) {j = 0;}
+          if (((ceuta[i][0] < y) && (ceuta[j][0]  >= y)) || ((ceuta[j][0] < y) && (ceuta[i][0] >= y))) {
+            if ( ceuta[i][1] + (y - ceuta[i][0])/(ceuta[j][0]-ceuta[i][0])*(ceuta[j][1] - ceuta[i][1])<x ) 
+               {
+            	inBound = !inBound;
+               }
+            }
+        }
+	    return inBound;
+	}
+	
+	public boolean isInMauritanie(double lat, double lon) {
+		int j=0;
+        boolean inBound = false;
+        double x = lon;
+        double y = lat;
+        double ceuta[][]  = {{21.333039,-13.014105},{21.333039,-16.940144},{20.784382,-17.064262},{21.284352,-16.914014},{21.284352,-13.014105}};
+        for (int i=0; i < 4 ; i++) {
+          j++;
+          if (j == 4) {j = 0;}
+          if (((ceuta[i][0] < y) && (ceuta[j][0]  >= y)) || ((ceuta[j][0] < y) && (ceuta[i][0] >= y))) {
+            if ( ceuta[i][1] + (y - ceuta[i][0])/(ceuta[j][0]-ceuta[i][0])*(ceuta[j][1] - ceuta[i][1])<x ) 
+               {
+            	inBound = !inBound;
+               }
+            }
+        }
+	    return inBound;
+	}
+	
+	public boolean isInMelilea(double lat, double lon) {
+		int j=0;
+        boolean inBound = false;
+        double x = lon;
+        double y = lat;
+        double ceuta[][]  = {{35.319974,-2.952852},{35.316266,-2.960067},{35.288948,-2.970539},{35.265965,-2.950454},{35.271992,-2.929511},{35.295818,-2.913552}};
+        for (int i=0; i < 4 ; i++) {
+          j++;
+          if (j == 4) {j = 0;}
+          if (((ceuta[i][0] < y) && (ceuta[j][0]  >= y)) || ((ceuta[j][0] < y) && (ceuta[i][0] >= y))) {
+            if ( ceuta[i][1] + (y - ceuta[i][0])/(ceuta[j][0]-ceuta[i][0])*(ceuta[j][1] - ceuta[i][1])<x ) 
+               {
+            	inBound = !inBound;
+               }
+            }
+        }
+	    return inBound;
+	}
+	
+	public boolean isInAlgerie(double lat, double lon) {
+		int j=0;
+        boolean inBound = false;
+        double x = lon;
+        double y = lat;
+        double ceuta[][]  = {{34.936012,-1.973600},{34.879471,-1.972144},{34.842021,-1.893973},{34.806529,-1.888122},{34.802300,-1.859627},{34.743703,-1.739356},{34.855287, -1.860319}};
+        for (int i=0; i < 4 ; i++) {
+          j++;
+          if (j == 4) {j = 0;}
+          if (((ceuta[i][0] < y) && (ceuta[j][0]  >= y)) || ((ceuta[j][0] < y) && (ceuta[i][0] >= y))) {
+            if ( ceuta[i][1] + (y - ceuta[i][0])/(ceuta[j][0]-ceuta[i][0])*(ceuta[j][1] - ceuta[i][1])<x ) 
+               {
+            	inBound = !inBound;
+               }
+            }
+        }
+	    return inBound;
+	}
 }
