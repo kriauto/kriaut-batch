@@ -626,7 +626,7 @@ public class CarDaoImpl implements CarDao {
 				+ " and   ps.valid = true "
 				+ " and   ps.attributes not like '%alarm%' "
 				+ " and   ps.network = 'null' "
-				+ " and   ps.fixtime  >= '"+ time + "'"
+				+ " and   to_char(ps.fixtime,'yyyy-MM-ss HH24:MI:SS')  >= '"+ time + "'"
 				+ " order by ps.fixtime ",new Object[] { deviceid }, new BeanPropertyRowMapper(Location.class));
 		return locations;
 	}

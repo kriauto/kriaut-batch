@@ -243,6 +243,12 @@ public class SpringEnableSchedulingExample {
 	@Scheduled(fixedDelay = 3600000)
     public void maxspeedNotifications() throws IOException {
        List<Profile> profiles = profileservice.getAllProfiles();
+       Calendar calendar = Calendar.getInstance();
+       Date d1 = calendar.getTime();
+	   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	   calendar.add(Calendar.HOUR, -1);
+	   Date d2 = calendar.getTime();
+       String date = sdf.format(d2);
        for(int i=0; i < profiles.size(); i++){
     	   Profile profile = profiles.get(i);
     	   System.out.println("Profile --> " + profile);
@@ -252,10 +258,6 @@ public class SpringEnableSchedulingExample {
     		   for(int j=0; j<cars.size(); j++){
     			   Car car = cars.get(j);
     			   if(null != car && null != car.getMaxspeed() && null != car.getNotifmaxspeed() && true == car.getNotifmaxspeed()){
-							 Calendar calendar = Calendar.getInstance();
-						     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH24:MM:SS");
-						     calendar.add(Calendar.MINUTE, -60);
-	                         String date = sdf.format(calendar.getTime());
 	                         Speed speed = carservice.getMaxSpeedByCarTime(car.getDeviceid(), date);
 		    				 if(null != speed && Double.valueOf(speed.getMaxSpeed()) > car.getMaxspeed()){
 		    					 String message = "La vitesse journalière maximale autorisée ("+car.getMaxspeed()+") est dépassée pour la voiture : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
@@ -274,88 +276,6 @@ public class SpringEnableSchedulingExample {
        }
     }
 	
-	/**** exit zone Notifications ***/
-//	@Scheduled(fixedDelay = 3600000)
-//    public void exitzoneNotifications() throws IOException {
-//       List<Profile> profiles = profileservice.getAllProfiles();
-//       for(int i=0; i < profiles.size(); i++){
-//    	   Profile profile = profiles.get(i);
-//    	   System.out.println("Profile --> " + profile);
-//    	   if(null != profile && null != profile.getLogin()){
-//    		   List<Notification> notifications = notificationservice.getPushTokenByProfile(profile.getLogin());
-//    		   List<Car> cars = carservice.getAllCarsByProfile(profile.getLogin());
-//    		   for(int j=0; j<cars.size(); j++){
-//    			   Car car = cars.get(j);
-//    			   if(null != car && null != car.getMaxspeed() && null != car.getNotifmaxspeed() && true == car.getNotifmaxspeed()){
-//							 Calendar calendar = Calendar.getInstance();
-//						     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH24:MM:SS");
-//						     calendar.add(Calendar.MINUTE, -60);
-//	                         String date = sdf.format(calendar.getTime());
-//	                         List<Location> locations = carservice.getAllLocationByCarTime(car.getDeviceid(), date);
-//	                 	     for(int k=0 ; k<locations.size() ; k++){
-//	                 		   Location location = locations.get(k);
-//	                 		   if(isInCeuta(location.getLatitude(), location.getLongitude())){
-//	                 			  String message = "Sortie de territoire : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
-//			    					 for(int v=0; v<notifications.size(); v++){
-//			    					   Notification notification = notifications.get(v);
-//			    					   if(null != notification && null != notification.getPushnotiftoken()){
-//			    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
-//			    					   }
-//			    					 }
-//			    					 Notification notif = new Notification(car.getDeviceid().toString(), message);
-//			    					 notificationservice.addNotification(notif);
-//	                     		break;
-//	                 		}
-//	                 		if(isInMelilea(location.getLatitude(), location.getLongitude())){
-//	                 			String message = "La"+notif.getMark()+notif.getModel()+notif.getColor()+notif.getImmatriculation()+"est+a+melilia";
-//	                 			senderservice.sendSms("KriAuto.ma", notif.getPhone(), message);
-//	                     		Car car = carservice.getCarByDevice(notif.getDeviceid());
-//	                     		car.setIsnotifdefaultgeofence(true);
-//	                     		carservice.updateCar(car);
-//	                     		notif.setTexte(message);
-//	                     		notificationservice.addNotification(notif);
-//	                     		System.out.println(message);
-//	                     		break;
-//	                 		}
-//	                 		if(isInAlgerie(location.getLatitude(), location.getLongitude())){
-//	                 			String message = "La"+notif.getMark()+notif.getModel()+notif.getColor()+notif.getImmatriculation()+"est+en+algerie";
-//	                 			senderservice.sendSms("KriAuto.ma", notif.getPhone(), message);
-//	                     		Car car = carservice.getCarByDevice(notif.getDeviceid());
-//	                     		car.setIsnotifdefaultgeofence(true);
-//	                     		carservice.updateCar(car);
-//	                     		notif.setTexte(message);
-//	                     		notificationservice.addNotification(notif);
-//	                     		System.out.println(message);
-//	                     		break;
-//	                 		}
-//	                 		if(isInMauritanie(location.getLatitude(), location.getLongitude())){
-//	                 			String message = "La"+notif.getMark()+notif.getModel()+notif.getColor()+notif.getImmatriculation()+"est+en+mauritanie";
-//	                 			senderservice.sendSms("KriAuto.ma", notif.getPhone(), message);
-//	                     		Car car = carservice.getCarByDevice(notif.getDeviceid());
-//	                     		car.setIsnotifdefaultgeofence(true);
-//	                     		carservice.updateCar(car);
-//	                     		notif.setTexte(message);
-//	                     		notificationservice.addNotification(notif);
-//	                     		System.out.println(message);
-//	                     		break;
-//	                 		}
-//		    				 if(null != speed && Double.valueOf(speed.getMaxSpeed()) > car.getMaxspeed()){
-//		    					 String message = "La vitesse journalière maximale autorisée ("+car.getMaxspeed()+") est dépassée pour la voiture : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
-//		    					 for(int k=0; k<notifications.size(); k++){
-//		    					   Notification notification = notifications.get(k);
-//		    					   if(null != notification && null != notification.getPushnotiftoken()){
-//		    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
-//		    					   }
-//		    					 }
-//		    					 Notification notif = new Notification(car.getDeviceid().toString(), message);
-//		    					 notificationservice.addNotification(notif);
-//		    				}
-//    			   }
-//    		   }
-//    	   }
-//       }
-//    }
-	
 	/**** Max course Notifications ***/
 	@Scheduled(cron = "00 00 23 * * *")
     public void maxcourseNotifications() throws IOException {
@@ -371,7 +291,6 @@ public class SpringEnableSchedulingExample {
     			   if(null != car && null != car.getMaxcourse() && null != car.getNotifmaxcourse() && true == car.getNotifmaxcourse() && null != profile && null != profile.getToken()){
 							 Calendar calendar = Calendar.getInstance();
 						     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-						     //calendar.add(Calendar.DATE, -35);
 	                         String date = sdf.format(calendar.getTime());
 	                         Statistic statistic = carservice.getCarStatistic(car.getDeviceid(), date, profile.getToken());
 		    				 if(null != statistic && statistic.getCourse() > car.getMaxcourse()){
@@ -391,134 +310,86 @@ public class SpringEnableSchedulingExample {
        }
     }
  
-//	@Scheduled(fixedDelay = 60000)
-//    public void executeStopEngine() {
-//        System.out.println("Start Start/Stop Job " + new Date());
-//        List<Notification> notifs = carservice.getDataNotification(1);
-//        for(int i =0; i < notifs.size() ; i++){
-//        	Notification notif = notifs.get(i);
-//        	Location location = carservice.getLastLocationByCar(notif.getDeviceid());
-//        	if(null != location && location.getSpeed() <= 10){
-//        		String message = "voiture arrete "+notif.getMark()+notif.getModel()+notif.getColor()+notif.getImmatriculation();
-//        		senderservice.sendSms("KriAuto.ma", notif.getSimnumber(), "stop135791");
-//        		try {
-//					Thread.sleep(10000);
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//        		senderservice.sendSms("KriAuto.ma", notif.getPhone(), message);
-//        		Car car = carservice.getCarByDevice(notif.getDeviceid());
-//        		car.setStatus(1);
-//        		carservice.updateCar(car);
-//        		notif.setTexte(message);
-//        		notificationservice.addNotification(notif);
-//        		System.out.println(message);
-//        	}
-//        }
-//        System.out.println("End Start/Stop Job " + new Date());
-//    }
-//	
-////	@Scheduled(fixedDelay = 120000)
-////    public void executeDefaultGeoFence() {
-////        System.out.println("Start Sortie Territoire Job "+new Date());
-////        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-////        Calendar now1 = Calendar.getInstance();
-////	    now1.add(Calendar.DAY_OF_YEAR, -120);
-////	    Date now2 = now1.getTime(); 
-////	    String time = df.format(now2);
-////        List<Notification> notifs = carservice.getDataNotification(3);
-////        for(int i =0; i < notifs.size() ; i++){
-////        	Notification notif = notifs.get(i);
-////        	List<Location> locations = carservice.getAllLocationByCarTime(notif.getDeviceid(), time);
-////        	for(int j=0 ; j<locations.size() ; j++){
-////        		Location location = locations.get(j);
-////        		if(isInCeuta(location.getLatitude(), location.getLongitude())){
-////        			String message = "La"+notif.getMark()+notif.getModel()+notif.getColor()+notif.getImmatriculation()+"est+a+ceuta";
-////        			senderservice.sendSms("KriAuto.ma", notif.getPhone(), message);
-////            		Car car = carservice.getCarByDevice(notif.getDeviceid());
-////            		car.setIsnotifdefaultgeofence(true);
-////            		carservice.updateCar(car);
-////            		notif.setTexte(message);
-////            		notificationservice.addNotification(notif);
-////            		System.out.println(message);
-////            		break;
-////        		}
-////        		if(isInMelilea(location.getLatitude(), location.getLongitude())){
-////        			String message = "La"+notif.getMark()+notif.getModel()+notif.getColor()+notif.getImmatriculation()+"est+a+melilia";
-////        			senderservice.sendSms("KriAuto.ma", notif.getPhone(), message);
-////            		Car car = carservice.getCarByDevice(notif.getDeviceid());
-////            		car.setIsnotifdefaultgeofence(true);
-////            		carservice.updateCar(car);
-////            		notif.setTexte(message);
-////            		notificationservice.addNotification(notif);
-////            		System.out.println(message);
-////            		break;
-////        		}
-////        		if(isInAlgerie(location.getLatitude(), location.getLongitude())){
-////        			String message = "La"+notif.getMark()+notif.getModel()+notif.getColor()+notif.getImmatriculation()+"est+en+algerie";
-////        			senderservice.sendSms("KriAuto.ma", notif.getPhone(), message);
-////            		Car car = carservice.getCarByDevice(notif.getDeviceid());
-////            		car.setIsnotifdefaultgeofence(true);
-////            		carservice.updateCar(car);
-////            		notif.setTexte(message);
-////            		notificationservice.addNotification(notif);
-////            		System.out.println(message);
-////            		break;
-////        		}
-////        		if(isInMauritanie(location.getLatitude(), location.getLongitude())){
-////        			String message = "La"+notif.getMark()+notif.getModel()+notif.getColor()+notif.getImmatriculation()+"est+en+mauritanie";
-////        			senderservice.sendSms("KriAuto.ma", notif.getPhone(), message);
-////            		Car car = carservice.getCarByDevice(notif.getDeviceid());
-////            		car.setIsnotifdefaultgeofence(true);
-////            		carservice.updateCar(car);
-////            		notif.setTexte(message);
-////            		notificationservice.addNotification(notif);
-////            		System.out.println(message);
-////            		break;
-////        		}
-////        	}
-////        }
-////        System.out.println("End Sortie Territoire Job " + new Date());
-////    }
-////	
-////	@Scheduled(fixedDelay = 180000)
-////    public void executeGeoFence() {
-////        System.out.println("Start Sortie Zone Job "+new Date());
-////        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-////        Calendar now1 = Calendar.getInstance();
-////	    now1.add(Calendar.DAY_OF_YEAR, -120);
-////	    Date now2 = now1.getTime();
-////	    String time = df.format(now2);
-////        List<Notification> notifs = carservice.getDataNotification(2);
-////        for(int i =0; i < notifs.size() ; i++){
-////        	Notification notif = notifs.get(i);
-////        	List<Location> locations = carservice.getAllLocationByCarTime(notif.getDeviceid(), time);
-////        	for(int j=0 ; j<locations.size() ; j++){
-////        		Location location = locations.get(j);
-////        		if(!isInZone(notif, location.getLatitude(), location.getLongitude())){
-////        			String message = "La"+notif.getMark()+notif.getModel()+notif.getColor()+notif.getImmatriculation()+"a+quitter+la+zone+virtuelle";
-////        			senderservice.sendSms("KriAuto.ma", notif.getPhone(), message);
-////            		Car car = carservice.getCarByDevice(notif.getDeviceid());
-////            		car.setIsnotifgeofence(true);
-////            		carservice.updateCar(car);
-////            		notif.setTexte(message);
-////            		notificationservice.addNotification(notif);
-////            		System.out.println(message);
-////            		break;
-////        		}
-////        	}
-////        }
-////        System.out.println("End Sortie Zone Job " +new Date());
-////    }
-////	
-////	@Scheduled(cron = "59 59 23 * * *")
-////    public void executeInitGeFence() {
-////        System.out.println("Start Init GeFence " + new Date());
-////        carservice.initGeoFence();
-////        System.out.println("End Init GeFence " + new Date());
-////    }
-////	
+	
+	/**** exit zone Notifications ***/
+	@Scheduled(fixedDelay = 6000)
+    public void exitzoneNotifications() throws IOException {
+       List<Profile> profiles = profileservice.getAllProfiles();
+       Calendar calendar = Calendar.getInstance();
+       Date d1 = calendar.getTime();
+	   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	   calendar.add(Calendar.HOUR, -1);
+	   Date d2 = calendar.getTime();
+       String date = sdf.format(d2);
+       for(int i=0; i < profiles.size(); i++){
+    	   Profile profile = profiles.get(i);
+    	   System.out.println("Profile --> " + profile);
+    	   if(null != profile && null != profile.getLogin()){
+    		   List<Notification> notifications = notificationservice.getPushTokenByProfile(profile.getLogin());
+    		   List<Car> cars = carservice.getAllCarsByProfile(profile.getLogin());
+    		   for(int j=0; j<cars.size(); j++){
+    			   Car car = cars.get(j);
+    			   if(null != car){
+    				         boolean isceuta = false, ismelilia=false,isalgerie=false,ismauritanie=false;							
+	                         List<Location> locations = carservice.getAllLocationByCarTime(car.getDeviceid(), date);
+	                 	     for(int k=0 ; k<locations.size() ; k++){
+	                 		   Location location = locations.get(k);
+	                 		   if(!isceuta && null != location && isInCeuta(location.getLatitude(), location.getLongitude())){
+	                 			     String message = "Sortie de territoire (sebta) : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+			    					 for(int v=0; v<notifications.size(); v++){
+			    					   Notification notification = notifications.get(v);
+			    					   if(null != notification && null != notification.getPushnotiftoken()){
+			    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
+			    					   }
+			    					 }
+			    					 Notification notif = new Notification(car.getDeviceid().toString(), message);
+			    					 notificationservice.addNotification(notif);
+			    					 isceuta = true;
+	                 		   }
+	                 		  if(!ismelilia && null != location && isInMelilea(location.getLatitude(), location.getLongitude())){
+	                 			     String message = "Sortie de territoire (melilia) : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+			    					 for(int v=0; v<notifications.size(); v++){
+			    					   Notification notification = notifications.get(v);
+			    					   if(null != notification && null != notification.getPushnotiftoken()){
+			    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
+			    					   }
+			    					 }
+			    					 Notification notif = new Notification(car.getDeviceid().toString(), message);
+			    					 notificationservice.addNotification(notif);
+			    					 ismelilia = true;
+	                 		   }
+	                 		 if(!isalgerie && null != location && isInAlgerie(location.getLatitude(), location.getLongitude())){
+                 			     String message = "Sortie de territoire (algerie) : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+		    					 for(int v=0; v<notifications.size(); v++){
+		    					   Notification notification = notifications.get(v);
+		    					   if(null != notification && null != notification.getPushnotiftoken()){
+		    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
+		    					   }
+		    					 }
+		    					 Notification notif = new Notification(car.getDeviceid().toString(), message);
+		    					 notificationservice.addNotification(notif);
+		    					 isalgerie = true;
+                 		   }
+	                 		if(!ismauritanie && null != location && isInMauritanie(location.getLatitude(), location.getLongitude())){
+                			     String message = "Sortie de territoire (mauritanie) : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+		    					 for(int v=0; v<notifications.size(); v++){
+		    					   Notification notification = notifications.get(v);
+		    					   if(null != notification && null != notification.getPushnotiftoken()){
+		    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
+		    					   }
+		    					  }
+		    					  Notification notif = new Notification(car.getDeviceid().toString(), message);
+		    					  notificationservice.addNotification(notif);
+		    					  ismauritanie = true;
+                		        }
+	                 	     }
+    			          }
+    			       }
+    	            }
+                 }
+
+    }
+		
 	public boolean isInZone(Car car, double lat, double lon) {
 		int j=0;
         boolean inBound = false;
