@@ -312,7 +312,7 @@ public class SpringEnableSchedulingExample {
  
 	
 	/**** exit zone Notifications ***/
-	@Scheduled(fixedDelay = 6000)
+	@Scheduled(fixedDelay = 3600000)
     public void exitzoneNotifications() throws IOException {
        List<Profile> profiles = profileservice.getAllProfiles();
        Calendar calendar = Calendar.getInstance();
@@ -390,63 +390,102 @@ public class SpringEnableSchedulingExample {
 
     }
 	
-//	@Scheduled(fixedDelay = 180000)
-////public void executeGeoFence() {
-////    System.out.println("Start Sortie Zone Job "+new Date());
-////    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-////    Calendar now1 = Calendar.getInstance();
-////    now1.add(Calendar.DAY_OF_YEAR, -120);
-////    Date now2 = now1.getTime();
-////    String time = df.format(now2);
-////    List<Notification> notifs = carservice.getDataNotification(2);
-////    for(int i =0; i < notifs.size() ; i++){
-////    	Notification notif = notifs.get(i);
-////    	List<Location> locations = carservice.getAllLocationByCarTime(notif.getDeviceid(), time);
-////    	for(int j=0 ; j<locations.size() ; j++){
-////    		Location location = locations.get(j);
-////    		if(!isInZone(notif, location.getLatitude(), location.getLongitude())){
-////    			String message = "La"+notif.getMark()+notif.getModel()+notif.getColor()+notif.getImmatriculation()+"a+quitter+la+zone+virtuelle";
-////    			senderservice.sendSms("KriAuto.ma", notif.getPhone(), message);
-////        		Car car = carservice.getCarByDevice(notif.getDeviceid());
-////        		car.setIsnotifgeofence(true);
-////        		carservice.updateCar(car);
-////        		notif.setTexte(message);
-////        		notificationservice.addNotification(notif);
-////        		System.out.println(message);
-////        		break;
-////    		}
-////    	}
-////    }
-////    System.out.println("End Sortie Zone Job " +new Date());
-////}
+	@Scheduled(fixedDelay = 180000)
+    public void inoutzoneNotification() throws IOException {
+        List<Profile> profiles = profileservice.getAllProfiles();
+        Calendar calendar = Calendar.getInstance();
+        Date d1 = calendar.getTime();
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    calendar.add(Calendar.HOUR, -1);
+	    Date d2 = calendar.getTime();
+        String date = sdf.format(d2);
+        for(int i=0; i < profiles.size(); i++){
+ 	       Profile profile = profiles.get(i);
+ 	       System.out.println("Profile --> " + profile);
+ 	       if(null != profile && null != profile.getLogin()){
+ 		     List<Notification> notifications = notificationservice.getPushTokenByProfile(profile.getLogin());
+ 		     List<Car> cars = carservice.getAllCarsByProfile(profile.getLogin());
+ 		     for(int j=0; j<cars.size(); j++){
+ 			   Car car = cars.get(j);
+ 			   if(null != car)
+ 			     {						
+	              List<Location> locations = carservice.getAllLocationByCarTime(car.getDeviceid(), date);
+	              for(int k=0 ; k<locations.size() ; k++){
+	                 Location location = locations.get(k);
+	                 if(isInZone(car, location.getLatitude(), location.getLongitude()) && !car.getInzone()){
+	                	 String message = "Sortie de zone virtuelle : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+	                	 for(int v=0; v<notifications.size(); v++){
+	    					   Notification notification = notifications.get(v);
+	    					   if(null != notification && null != notification.getPushnotiftoken()){
+	    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
+	    					   }
+	    				 }
+	    				 Notification notif = new Notification(car.getDeviceid().toString(), message);
+	    				 notificationservice.addNotification(notif);
+	                     break;
+	                 }else{
+	                	 String message = "Entrée en zone virtuelle : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+	                	 for(int v=0; v<notifications.size(); v++){
+	    					   Notification notification = notifications.get(v);
+	    					   if(null != notification && null != notification.getPushnotiftoken()){
+	    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
+	    					   }
+	    				 }
+	    				 Notification notif = new Notification(car.getDeviceid().toString(), message);
+	    				 notificationservice.addNotification(notif);
+	                     break;
+	                 }
+ 			       }
+ 			     }
+ 		      }
+ 		   }
+ 	   }
+    }
 
-//	@Scheduled(fixedDelay = 60000)
-//  public void executeStopEngine() {
-//      System.out.println("Start Start/Stop Job " + new Date());
-//      List<Notification> notifs = carservice.getDataNotification(1);
-//      for(int i =0; i < notifs.size() ; i++){
-//      	Notification notif = notifs.get(i);
-//      	Location location = carservice.getLastLocationByCar(notif.getDeviceid());
-//      	if(null != location && location.getSpeed() <= 10){
-//      		String message = "voiture arrete "+notif.getMark()+notif.getModel()+notif.getColor()+notif.getImmatriculation();
-//      		senderservice.sendSms("KriAuto.ma", notif.getSimnumber(), "stop135791");
-//      		try {
-//					Thread.sleep(10000);
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//      		senderservice.sendSms("KriAuto.ma", notif.getPhone(), message);
-//      		Car car = carservice.getCarByDevice(notif.getDeviceid());
-//      		car.setStatus(1);
-//      		carservice.updateCar(car);
-//      		notif.setTexte(message);
-//      		notificationservice.addNotification(notif);
-//      		System.out.println(message);
-//      	}
-//      }
-//      System.out.println("End Start/Stop Job " + new Date());
-//  }
+	@Scheduled(fixedDelay = 900000)
+    public void executeStopEngine() throws IOException, ParseException {
+      List<Profile> profiles = profileservice.getAllProfiles();
+      Calendar calendar = Calendar.getInstance();
+      Date d1 = calendar.getTime();
+	  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	  calendar.add(Calendar.MINUTE, -15);
+	  Date d2 = calendar.getTime();
+      String date = sdf.format(d2);
+      int status ;
+      for(int i=0; i < profiles.size(); i++){
+	       Profile profile = profiles.get(i);
+	       System.out.println("Profile --> " + profile);
+	       if(null != profile && null != profile.getLogin()){
+		     List<Notification> notifications = notificationservice.getPushTokenByProfile(profile.getLogin());
+		     List<Car> cars = carservice.getAllCarsByProfile(profile.getLogin());
+		     for(int j=0; j<cars.size(); j++){
+			   Car car = cars.get(j);
+			   if(null != car && car.getStatus() == 2)
+			     {						
+				   Location location = carservice.getLastLocationByCar(car.getDeviceid(),date);
+	               if(car.getSpeed() < 10){
+	                  String message = "Voiture arretée : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+	                  if(car.getDevicetype().equals("TK103")){
+	          			status = senderservice.sendSms("KriAuto.ma", car.getSimnumber(), "stop135791");
+	          	      }else{
+	          	    	status = senderservice.sendSms("KriAuto.ma", car.getSimnumber(), "kauto 13579 setdigout 00");
+	          	      }
+	                  for(int v=0; v<notifications.size(); v++){
+	    					   Notification notification = notifications.get(v);
+	    					   if(null != notification && null != notification.getPushnotiftoken()){
+	    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
+	    					   }
+	    			  }
+	                  car.setStatus(1);
+	             	  carservice.updateCar(car);
+	    			  Notification notif = new Notification(car.getDeviceid().toString(), message);
+	    			  notificationservice.addNotification(notif);
+			       }
+			     }
+		      }
+		   }
+	   }
+  }
 	
 	public boolean isInZone(Car car, double lat, double lon) {
 		int j=0;
