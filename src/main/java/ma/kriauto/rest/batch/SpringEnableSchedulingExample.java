@@ -389,7 +389,104 @@ public class SpringEnableSchedulingExample {
                  }
 
     }
-		
+	
+	@Scheduled(fixedDelay = 180000)
+    public void inoutzoneNotification() throws IOException {
+        List<Profile> profiles = profileservice.getAllProfiles();
+        Calendar calendar = Calendar.getInstance();
+        Date d1 = calendar.getTime();
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    calendar.add(Calendar.HOUR, -1);
+	    Date d2 = calendar.getTime();
+        String date = sdf.format(d2);
+        for(int i=0; i < profiles.size(); i++){
+ 	       Profile profile = profiles.get(i);
+ 	       System.out.println("Profile --> " + profile);
+ 	       if(null != profile && null != profile.getLogin()){
+ 		     List<Notification> notifications = notificationservice.getPushTokenByProfile(profile.getLogin());
+ 		     List<Car> cars = carservice.getAllCarsByProfile(profile.getLogin());
+ 		     for(int j=0; j<cars.size(); j++){
+ 			   Car car = cars.get(j);
+ 			   if(null != car)
+ 			     {						
+	              List<Location> locations = carservice.getAllLocationByCarTime(car.getDeviceid(), date);
+	              for(int k=0 ; k<locations.size() ; k++){
+	                 Location location = locations.get(k);
+	                 if(isInZone(car, location.getLatitude(), location.getLongitude()) && !car.getInzone()){
+	                	 String message = "Sortie de zone virtuelle : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+	                	 for(int v=0; v<notifications.size(); v++){
+	    					   Notification notification = notifications.get(v);
+	    					   if(null != notification && null != notification.getPushnotiftoken()){
+	    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
+	    					   }
+	    				 }
+	    				 Notification notif = new Notification(car.getDeviceid().toString(), message);
+	    				 notificationservice.addNotification(notif);
+	                     break;
+	                 }else{
+	                	 String message = "Entrée en zone virtuelle : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+	                	 for(int v=0; v<notifications.size(); v++){
+	    					   Notification notification = notifications.get(v);
+	    					   if(null != notification && null != notification.getPushnotiftoken()){
+	    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
+	    					   }
+	    				 }
+	    				 Notification notif = new Notification(car.getDeviceid().toString(), message);
+	    				 notificationservice.addNotification(notif);
+	                     break;
+	                 }
+ 			       }
+ 			     }
+ 		      }
+ 		   }
+ 	   }
+    }
+
+	@Scheduled(fixedDelay = 900000)
+    public void executeStopEngine() throws IOException, ParseException {
+      List<Profile> profiles = profileservice.getAllProfiles();
+      Calendar calendar = Calendar.getInstance();
+      Date d1 = calendar.getTime();
+	  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	  calendar.add(Calendar.MINUTE, -15);
+	  Date d2 = calendar.getTime();
+      String date = sdf.format(d2);
+      int status ;
+      for(int i=0; i < profiles.size(); i++){
+	       Profile profile = profiles.get(i);
+	       System.out.println("Profile --> " + profile);
+	       if(null != profile && null != profile.getLogin()){
+		     List<Notification> notifications = notificationservice.getPushTokenByProfile(profile.getLogin());
+		     List<Car> cars = carservice.getAllCarsByProfile(profile.getLogin());
+		     for(int j=0; j<cars.size(); j++){
+			   Car car = cars.get(j);
+			   if(null != car && car.getStatus() == 2)
+			     {						
+				   Location location = carservice.getLastLocationByCar(car.getDeviceid(),date);
+	               if(car.getSpeed() < 10){
+	                  String message = "Voiture arretée : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+	                  if(car.getDevicetype().equals("TK103")){
+	          			status = senderservice.sendSms("KriAuto.ma", car.getSimnumber(), "stop135791");
+	          	      }else{
+	          	    	status = senderservice.sendSms("KriAuto.ma", car.getSimnumber(), "kauto 13579 setdigout 00");
+	          	      }
+	                  for(int v=0; v<notifications.size(); v++){
+	    					   Notification notification = notifications.get(v);
+	    					   if(null != notification && null != notification.getPushnotiftoken()){
+	    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
+	    					   }
+	    			  }
+	                  car.setStatus(1);
+	             	  carservice.updateCar(car);
+	    			  Notification notif = new Notification(car.getDeviceid().toString(), message);
+	    			  notificationservice.addNotification(notif);
+			       }
+			     }
+		      }
+		   }
+	   }
+  }
+	
 	public boolean isInZone(Car car, double lat, double lon) {
 		int j=0;
         boolean inBound = false;
