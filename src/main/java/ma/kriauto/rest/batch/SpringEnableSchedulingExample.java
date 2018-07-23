@@ -312,7 +312,7 @@ public class SpringEnableSchedulingExample {
  
 	
 	/**** exit zone Notifications ***/
-	@Scheduled(fixedDelay = 6000)
+	@Scheduled(fixedDelay = 3600000)
     public void exitzoneNotifications() throws IOException {
        List<Profile> profiles = profileservice.getAllProfiles();
        Calendar calendar = Calendar.getInstance();
