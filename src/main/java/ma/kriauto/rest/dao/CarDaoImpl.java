@@ -16,6 +16,7 @@ import ma.kriauto.rest.domain.Event;
 import ma.kriauto.rest.domain.Item;
 import ma.kriauto.rest.domain.Location;
 import ma.kriauto.rest.domain.Notification;
+import ma.kriauto.rest.domain.Profile;
 import ma.kriauto.rest.domain.Speed;
 import ma.kriauto.rest.domain.Statistic;
 import ma.kriauto.rest.domain.StatisticValues;
@@ -799,5 +800,21 @@ public class CarDaoImpl implements CarDao {
 				speed.setMaxSpeed(String.valueOf(Math.round(Double.valueOf(speed.getMaxSpeed())*1.85)));
 			}
 			return speed;
+	}
+
+	@Override
+	public boolean isDeviceDisconnected(Integer deviceid, String date) {
+		System.out.println("isDeviceDisconnected " +deviceid+ date);
+		List<Location> locations = new ArrayList<Location>();
+		locations = jdbcTemplate.query(" select distinct ps.* "
+				+ " from  positions ps "
+			    + " where ps.deviceid = ? "
+			    + " and   (ps.attributes like '%power:\"0.0\"%' or ps.attributes like '%alarm:\"lowBattery\"%') "
+				+ " and   to_char(ps.fixtime,'yyyy-MM-ss HH24:MI:SS')  >= ? ",new Object[] {deviceid, date}, new BeanPropertyRowMapper(Location.class));
+		if(null != locations && locations.size() > 0){
+			return true;
+		}else{
+			return false;
+		}
 	}
 }

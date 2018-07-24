@@ -12,5 +12,5 @@ public interface ProfileDao {
 	public void updateProfile (Profile profile);
 	public void addPushNotifProfile (Profile profile);
 	public void deletePushNotifProfile (Profile profile);
-	public List<Profile> getAllProfiles();
+	public List<Profile> getAllProfiles(); 
 }

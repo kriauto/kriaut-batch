@@ -3,7 +3,6 @@ package ma.kriauto.rest.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import ma.kriauto.rest.domain.Car;
 import ma.kriauto.rest.domain.Profile;
 
 import org.springframework.beans.factory.annotation.Autowired;

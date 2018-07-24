@@ -42,4 +42,5 @@ public interface CarService {
 	public String getGoodleAdresse(Double Lat, Double Lng);
 	public Event getLastEvent(Integer deviceid);
 	public double distance(double lat1, double lon1, double lat2, double lon2, char unit);
+	public boolean isDeviceDisconnected(Integer deviceid, String date);
 }
