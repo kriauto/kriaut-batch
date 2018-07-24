@@ -236,4 +236,10 @@ public class CarServiceImpl implements CarService {
 		// TODO Auto-generated method stub
 		return cardao.getMaxSpeedByCarTime(deviceid, date);
 	}
+
+	@Override
+	public boolean isDeviceDisconnected(Integer deviceid, String date) {
+		// TODO Auto-generated method stub
+		return cardao.isDeviceDisconnected(deviceid, date);
+	}
 }

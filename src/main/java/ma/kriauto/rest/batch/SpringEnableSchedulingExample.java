@@ -485,7 +485,49 @@ public class SpringEnableSchedulingExample {
 		      }
 		   }
 	   }
-  }
+    }
+	
+	/**** Disconnected device Notifications 
+	 * @throws ParseException ***/
+	@Scheduled(fixedDelay = 10000)
+    public void isDisconnectedNotifications() throws IOException, ParseException {
+	   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	   Date start = new Date();
+	   Date start1 = sdf.parse(sdf.format(start));
+       Calendar calendar = Calendar.getInstance();
+       Date d1 = calendar.getTime();
+	   calendar.add(Calendar.HOUR, -1);
+	   Date d2 = calendar.getTime();
+       String date = sdf.format(d2);
+       List<Profile> profiles = profileservice.getAllProfiles();
+       for(int i=0; i < profiles.size(); i++){
+    	   Profile profile = profiles.get(i);
+    	   System.out.println("Profile --> " + profile);
+    	   if(null != profile && null != profile.getLogin()){
+    		   List<Notification> notifications = notificationservice.getPushTokenByProfile(profile.getLogin());
+    		   List<Car> cars = carservice.getAllCarsByProfile(profile.getLogin());
+    		   for(int j=0; j<cars.size(); j++){
+    			   Car car = cars.get(j);
+    			   if(null != car && carservice.isDeviceDisconnected(car.getDeviceid(), date)){
+		    					 String message = "Boitier Gps débranchée ou batterie morte pour la voiture : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+		    					 for(int k=0; k<notifications.size(); k++){
+		    					   Notification notification = notifications.get(k);
+		    					   if(null != notification && null != notification.getPushnotiftoken()){
+		    					      //senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
+		    					   }
+		    					 }
+		    					 Notification notif = new Notification(car.getDeviceid().toString(), message);
+		    					 notificationservice.addNotification(notif);
+		    		}
+    			 }
+    		  }
+         }
+       Date end = new Date();
+	   Date end1 = sdf.parse(sdf.format(end));
+	   long diffInMillies = end1.getTime() - start1.getTime();
+	   long diff = TimeUnit.SECONDS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+	   System.out.println("diffInMillies --> " + diffInMillies+"diff --> "+diff);
+    }
 	
 	public boolean isInZone(Car car, double lat, double lon) {
 		int j=0;
