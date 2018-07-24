@@ -390,8 +390,8 @@ public class SpringEnableSchedulingExample {
 
     }
 	
-	@Scheduled(fixedDelay = 180000)
-    public void inoutzoneNotification() throws IOException {
+	@Scheduled(fixedDelay = 3600000)
+    public void inoutzoneNotification() throws IOException, ParseException {
         List<Profile> profiles = profileservice.getAllProfiles();
         Calendar calendar = Calendar.getInstance();
         Date d1 = calendar.getTime();
@@ -412,7 +412,7 @@ public class SpringEnableSchedulingExample {
 	              List<Location> locations = carservice.getAllLocationByCarTime(car.getDeviceid(), date);
 	              for(int k=0 ; k<locations.size() ; k++){
 	                 Location location = locations.get(k);
-	                 if(isInZone(car, location.getLatitude(), location.getLongitude()) && !car.getInzone()){
+	                 if(isInZone(car, location.getLatitude(), location.getLongitude()) == false && null != car.getInzone() && car.getInzone() == true){
 	                	 String message = "Sortie de zone virtuelle : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
 	                	 for(int v=0; v<notifications.size(); v++){
 	    					   Notification notification = notifications.get(v);
@@ -422,8 +422,12 @@ public class SpringEnableSchedulingExample {
 	    				 }
 	    				 Notification notif = new Notification(car.getDeviceid().toString(), message);
 	    				 notificationservice.addNotification(notif);
+	    				 car.setInzone(false);
+	    				 carservice.updateCar(car);
 	                     break;
-	                 }else{
+	                 }
+	                 
+	                 if(isInZone(car, location.getLatitude(), location.getLongitude()) == true && null != car.getInzone() && car.getInzone() == false){
 	                	 String message = "Entrée en zone virtuelle : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
 	                	 for(int v=0; v<notifications.size(); v++){
 	    					   Notification notification = notifications.get(v);
@@ -433,6 +437,8 @@ public class SpringEnableSchedulingExample {
 	    				 }
 	    				 Notification notif = new Notification(car.getDeviceid().toString(), message);
 	    				 notificationservice.addNotification(notif);
+	    				 car.setInzone(true);
+	    				 carservice.updateCar(car);
 	                     break;
 	                 }
  			       }
@@ -489,14 +495,14 @@ public class SpringEnableSchedulingExample {
 	
 	/**** Disconnected device Notifications 
 	 * @throws ParseException ***/
-	@Scheduled(fixedDelay = 10000)
+	@Scheduled(fixedDelay = 300000)
     public void isDisconnectedNotifications() throws IOException, ParseException {
 	   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	   Date start = new Date();
 	   Date start1 = sdf.parse(sdf.format(start));
        Calendar calendar = Calendar.getInstance();
        Date d1 = calendar.getTime();
-	   calendar.add(Calendar.HOUR, -1);
+	   calendar.add(Calendar.MINUTE, -5);
 	   Date d2 = calendar.getTime();
        String date = sdf.format(d2);
        List<Profile> profiles = profileservice.getAllProfiles();
@@ -513,7 +519,7 @@ public class SpringEnableSchedulingExample {
 		    					 for(int k=0; k<notifications.size(); k++){
 		    					   Notification notification = notifications.get(k);
 		    					   if(null != notification && null != notification.getPushnotiftoken()){
-		    					      //senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
+		    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
 		    					   }
 		    					 }
 		    					 Notification notif = new Notification(car.getDeviceid().toString(), message);

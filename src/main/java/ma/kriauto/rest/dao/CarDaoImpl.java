@@ -809,7 +809,7 @@ public class CarDaoImpl implements CarDao {
 		locations = jdbcTemplate.query(" select distinct ps.* "
 				+ " from  positions ps "
 			    + " where ps.deviceid = ? "
-			    + " and   (ps.attributes like '%power:\"0.0\"%' or ps.attributes like '%alarm:\"lowBattery\"%') "
+			    + " and   (ps.attributes like '%\"power\":0.0%' or ps.attributes like '%\"alarm\":\"lowBattery\"%') "
 				+ " and   to_char(ps.fixtime,'yyyy-MM-ss HH24:MI:SS')  >= ? ",new Object[] {deviceid, date}, new BeanPropertyRowMapper(Location.class));
 		if(null != locations && locations.size() > 0){
 			return true;
