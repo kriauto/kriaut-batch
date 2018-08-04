@@ -64,9 +64,9 @@ public class SpringEnableSchedulingExample {
 					    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                         Integer deviceid = car.getDeviceid();
                         String token = profile.getToken();
-                        for(int k=1; k<=1; k++){
+                        //for(int k=1; k<=210; k++){
                         	calendar = Calendar.getInstance();
-                        	calendar.add(Calendar.DATE, -k);
+                        	calendar.add(Calendar.DATE, -1);
                         	String date = sdf.format(calendar.getTime());
                         	Statistic statistic = carservice.getCarStatistic(deviceid, date, token);
                         	if(null != statistic && null != statistic.getCourse()){
@@ -75,7 +75,7 @@ public class SpringEnableSchedulingExample {
                     		currentcar.setEmptyingtotaldistance(Double.valueOf(Math.round(statistic.getCourse()+currentcar.getEmptyingtotaldistance())));
                     		carservice.updateCar(currentcar);
                         	}
-                        }
+                       //}
     			   }
     		   }
     	   }
@@ -409,10 +409,10 @@ public class SpringEnableSchedulingExample {
  			   Car car = cars.get(j);
  			   if(null != car)
  			     {						
-	              List<Location> locations = carservice.getAllLocationByCarTime(car.getDeviceid(), date);
+	              List<Location> locations = carservice.getAllLocationsByCar(car.getDeviceid(), date,profile.getToken());
 	              for(int k=0 ; k<locations.size() ; k++){
 	                 Location location = locations.get(k);
-	                 if(isInZone(car, location.getLatitude(), location.getLongitude()) == false && null != car.getInzone() && car.getInzone() == true){
+	                 if(isInZone(car, location.getLatitude(), location.getLongitude()) == false && (null == car.getInzone() || (null != car.getInzone() && car.getInzone() == true)) && null != car.getNotifoutzone() && car.getNotifoutzone() == true){
 	                	 String message = "Sortie de zone virtuelle : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
 	                	 for(int v=0; v<notifications.size(); v++){
 	    					   Notification notification = notifications.get(v);
@@ -427,7 +427,7 @@ public class SpringEnableSchedulingExample {
 	                     break;
 	                 }
 	                 
-	                 if(isInZone(car, location.getLatitude(), location.getLongitude()) == true && null != car.getInzone() && car.getInzone() == false){
+	                 if(isInZone(car, location.getLatitude(), location.getLongitude()) == true && (null == car.getInzone() || (null != car.getInzone() && car.getInzone() == false))  && null != car.getNotifinzone() && car.getNotifinzone() == true){
 	                	 String message = "Entrée en zone virtuelle : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
 	                	 for(int v=0; v<notifications.size(); v++){
 	    					   Notification notification = notifications.get(v);

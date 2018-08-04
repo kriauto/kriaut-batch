@@ -151,10 +151,6 @@ values (39,'gt06',512462,'2018-01-25 08:18:00.00' ,'2017-11-29 08:18:00','2017-1
 ,30,452,'','',0,'');
 
 
-update car set latitude1='36.075559',longitude1='-7.492703',latitude2='36.376890',longitude2='-1.010775',latitude3='31.905359',longitude3='-0.175819',latitude4='21.197021',longitude4='-12.436567',latitude5='20.612029',longitude5='-17.413379',latitude6='32.063787',longitude6='-13.524224';
-
-
-update car set enable=false,technicalcontroldate='2018-07-30',emptyingkilometre=10000,insuranceenddate='2018-07-30',maxspeed=60,maxcourse=80;
-
-
-update car set notiftechnicalcontroldate=true,notifemptyingkilometre=true,notifinsuranceenddate=true,notifmaxspeed=true,notifmaxcourse=true,notifminlevelfuel=false,notifmaxenginetemperature=false,notifminfridgetemperature=false,notifmaxfridgetemperature=false,notifautorisationcirculationenddate=false,notifinzone=true,notifoutzone=true,inzone=true;
+update car set latitude1='36.075559',longitude1='-7.492703',latitude2='36.376890',longitude2='-1.010775',latitude3='31.905359',longitude3='-0.175819',latitude4='21.197021',longitude4='-12.436567',latitude5='20.612029',longitude5='-17.413379',latitude6='32.063787',longitude6='-13.524224' where deviceid = 512491 ;
+update car set enable=false,technicalcontroldate='2018-01-01',emptyingkilometre=10000,insuranceenddate='2018-01-01',autorisationcirculationenddate='2018-01-01',maxspeed=125,maxcourse=100,maxenginetemperature=100,minfridgetemperature=-10,maxfridgetemperature=10.0,minlevelfuel=10.0,emptyingkilometreindex=1,emptyingtotaldistance=0.0  where deviceid = 512491 ;
+update car set notiftechnicalcontroldate=true,notifemptyingkilometre=true,notifinsuranceenddate=true,notifmaxspeed=true,notifmaxcourse=true,notifminlevelfuel=false,notifmaxenginetemperature=false,notifminfridgetemperature=false,notifmaxfridgetemperature=false,notifautorisationcirculationenddate=false,notifinzone=true,notifoutzone=true,inzone=true  where deviceid = 512491 ;
