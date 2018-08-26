@@ -187,8 +187,6 @@ public class CarDaoImpl implements CarDao {
 		System.out.println("getAllLocationsByCar " + deviceid);
 		List<Location> locations = new ArrayList<Location>();
 		List<Location> locations1 = new ArrayList<Location>();
-		List<Location> tmplocations = new ArrayList<Location>();
-		List<Event> events = new ArrayList<Event>();
 		
 		locations = jdbcTemplate.query(" select distinct ps.longitude, ps.latitude, ps.speed, ps.course, ps.fixtime -'1 hour'::interval AS servertime, to_char(ps.fixtime -'1 hour'::interval,'HH24:MI:SS') AS fixtime,ps.attributes, c.immatriculation, c.vin, c.mark, c.model, c.photo, c.color, ps.deviceid, c.colorCode" 
 				+ " from profile p, agency a,car c , positions ps "
@@ -576,6 +574,8 @@ public class CarDaoImpl implements CarDao {
 	public List<Location> getAllLocationByCarTime(Integer deviceid, String time) {
 		System.out.println("getAllLocationsByCar " + deviceid);
 		List<Location> locations = new ArrayList<Location>();
+		List<Location> locations1 = new ArrayList<Location>();
+		
 		locations = jdbcTemplate.query(" select distinct ps.* "
 				+ " from  positions ps "
 				+ " where ps.deviceid = ? "
@@ -584,7 +584,32 @@ public class CarDaoImpl implements CarDao {
 				+ " and   ps.network = 'null' "
 				+ " and   to_char(ps.fixtime,'yyyy-MM-ss HH24:MI:SS')  >= '"+ time + "'"
 				+ " order by ps.fixtime ",new Object[] { deviceid }, new BeanPropertyRowMapper(Location.class));
-		return locations;
+		double log = 0,lat = 0;
+		if(locations.size() > 0){
+		  for(int i = 0 ; i< locations.size(); i++){
+			if(null != locations.get(i)){
+			 if(0 == i){
+				if(null != locations.get(i))
+				log = locations.get(i).getLongitude();
+				lat = locations.get(i).getLatitude();
+				if(null != locations.get(i).getAttributes() && getDistance(locations.get(i).getAttributes()) <= 500){
+				   locations1.add(locations.get(i));
+				}
+			  }else{
+				if(log == locations.get(i).getLongitude() && lat == locations.get(i).getLatitude()){
+				  }else{
+					log = locations.get(i).getLongitude();
+					lat = locations.get(i).getLatitude();
+					double dist = distance(locations.get(i-1).getLatitude(), locations.get(i-1).getLongitude(), locations.get(i).getLatitude(), locations.get(i).getLongitude(), 'K');
+					  if(dist <= 1){
+						  locations1.add(locations.get(i));
+					  }
+				   }
+			    }
+		      }
+		   }
+		}
+		return locations1;
 	}
 
 	@Override

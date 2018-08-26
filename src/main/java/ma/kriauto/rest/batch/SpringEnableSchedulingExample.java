@@ -244,7 +244,6 @@ public class SpringEnableSchedulingExample {
     public void maxspeedNotifications() throws IOException {
        List<Profile> profiles = profileservice.getAllProfiles();
        Calendar calendar = Calendar.getInstance();
-       Date d1 = calendar.getTime();
 	   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	   calendar.add(Calendar.HOUR, -1);
 	   Date d2 = calendar.getTime();
@@ -316,7 +315,6 @@ public class SpringEnableSchedulingExample {
     public void exitzoneNotifications() throws IOException {
        List<Profile> profiles = profileservice.getAllProfiles();
        Calendar calendar = Calendar.getInstance();
-       Date d1 = calendar.getTime();
 	   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	   calendar.add(Calendar.HOUR, -1);
 	   Date d2 = calendar.getTime();
@@ -346,7 +344,7 @@ public class SpringEnableSchedulingExample {
 			    					 notificationservice.addNotification(notif);
 			    					 isceuta = true;
 	                 		   }
-	                 		  if(!ismelilia && null != location && isInMelilea(location.getLatitude(), location.getLongitude())){
+	                 		   if(!ismelilia && null != location && isInMelilea(location.getLatitude(), location.getLongitude())){
 	                 			     String message = "Sortie de territoire (melilia) : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
 			    					 for(int v=0; v<notifications.size(); v++){
 			    					   Notification notification = notifications.get(v);
@@ -358,7 +356,7 @@ public class SpringEnableSchedulingExample {
 			    					 notificationservice.addNotification(notif);
 			    					 ismelilia = true;
 	                 		   }
-	                 		 if(!isalgerie && null != location && isInAlgerie(location.getLatitude(), location.getLongitude())){
+	                 		   if(!isalgerie && null != location && isInAlgerie(location.getLatitude(), location.getLongitude())){
                  			     String message = "Sortie de territoire (algerie) : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
 		    					 for(int v=0; v<notifications.size(); v++){
 		    					   Notification notification = notifications.get(v);
@@ -369,8 +367,8 @@ public class SpringEnableSchedulingExample {
 		    					 Notification notif = new Notification(car.getDeviceid().toString(), message);
 		    					 notificationservice.addNotification(notif);
 		    					 isalgerie = true;
-                 		   }
-	                 		if(!ismauritanie && null != location && isInMauritanie(location.getLatitude(), location.getLongitude())){
+                 		      }
+	                 		  if(!ismauritanie && null != location && isInMauritanie(location.getLatitude(), location.getLongitude())){
                 			     String message = "Sortie de territoire (mauritanie) : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
 		    					 for(int v=0; v<notifications.size(); v++){
 		    					   Notification notification = notifications.get(v);
@@ -382,7 +380,7 @@ public class SpringEnableSchedulingExample {
 		    					  notificationservice.addNotification(notif);
 		    					  ismauritanie = true;
                 		        }
-	                 	     }
+	                 	      }
     			          }
     			       }
     	            }
@@ -394,7 +392,6 @@ public class SpringEnableSchedulingExample {
     public void inoutzoneNotification() throws IOException, ParseException {
         List<Profile> profiles = profileservice.getAllProfiles();
         Calendar calendar = Calendar.getInstance();
-        Date d1 = calendar.getTime();
 	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    calendar.add(Calendar.HOUR, -1);
 	    Date d2 = calendar.getTime();
@@ -412,31 +409,35 @@ public class SpringEnableSchedulingExample {
 	              List<Location> locations = carservice.getAllLocationsByCar(car.getDeviceid(), date,profile.getToken());
 	              for(int k=0 ; k<locations.size() ; k++){
 	                 Location location = locations.get(k);
-	                 if(isInZone(car, location.getLatitude(), location.getLongitude()) == false && (null == car.getInzone() || (null != car.getInzone() && car.getInzone() == true)) && null != car.getNotifoutzone() && car.getNotifoutzone() == true){
-	                	 String message = "Sortie de zone virtuelle : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
-	                	 for(int v=0; v<notifications.size(); v++){
+	                 if(isInZone(car, location.getLatitude(), location.getLongitude()) == false){
+	                	 if((null == car.getInzone() || (null != car.getInzone() && car.getInzone() == true)) && null != car.getNotifoutzone() && car.getNotifoutzone() == true){
+	                	    String message = "Sortie de zone virtuelle : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+	                	    for(int v=0; v<notifications.size(); v++){
 	    					   Notification notification = notifications.get(v);
 	    					   if(null != notification && null != notification.getPushnotiftoken()){
 	    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
 	    					   }
-	    				 }
-	    				 Notification notif = new Notification(car.getDeviceid().toString(), message);
-	    				 notificationservice.addNotification(notif);
+	    				    }
+	    				    Notification notif = new Notification(car.getDeviceid().toString(), message);
+	    				    notificationservice.addNotification(notif);
+	                	 }
 	    				 car.setInzone(false);
 	    				 carservice.updateCar(car);
 	                     break;
 	                 }
 	                 
-	                 if(isInZone(car, location.getLatitude(), location.getLongitude()) == true && (null == car.getInzone() || (null != car.getInzone() && car.getInzone() == false))  && null != car.getNotifinzone() && car.getNotifinzone() == true){
-	                	 String message = "Entrée en zone virtuelle : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
-	                	 for(int v=0; v<notifications.size(); v++){
+	                 if(isInZone(car, location.getLatitude(), location.getLongitude()) == true){
+	                	 if((null == car.getInzone() || (null != car.getInzone() && car.getInzone() == false))  && null != car.getNotifinzone() && car.getNotifinzone() == true){
+	                	   String message = "Entrée en zone virtuelle : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+	                	   for(int v=0; v<notifications.size(); v++){
 	    					   Notification notification = notifications.get(v);
 	    					   if(null != notification && null != notification.getPushnotiftoken()){
 	    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
 	    					   }
-	    				 }
-	    				 Notification notif = new Notification(car.getDeviceid().toString(), message);
-	    				 notificationservice.addNotification(notif);
+	    				   }
+	    				   Notification notif = new Notification(car.getDeviceid().toString(), message);
+	    				   notificationservice.addNotification(notif);
+	                	 }
 	    				 car.setInzone(true);
 	    				 carservice.updateCar(car);
 	                     break;
@@ -452,7 +453,6 @@ public class SpringEnableSchedulingExample {
     public void executeStopEngine() throws IOException, ParseException {
       List<Profile> profiles = profileservice.getAllProfiles();
       Calendar calendar = Calendar.getInstance();
-      Date d1 = calendar.getTime();
 	  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	  calendar.add(Calendar.MINUTE, -15);
 	  Date d2 = calendar.getTime();
@@ -501,7 +501,6 @@ public class SpringEnableSchedulingExample {
 	   Date start = new Date();
 	   Date start1 = sdf.parse(sdf.format(start));
        Calendar calendar = Calendar.getInstance();
-       Date d1 = calendar.getTime();
 	   calendar.add(Calendar.MINUTE, -5);
 	   Date d2 = calendar.getTime();
        String date = sdf.format(d2);
