@@ -50,7 +50,7 @@ public class SpringEnableSchedulingExample {
 	}
 	
 	/**** Empting kilometre * @throws ParseException ***/
-	@Scheduled(cron = "00 10 02 * * *")
+	@Scheduled(cron = "00 00 02 * * *")
 //	@Scheduled(fixedDelay = 3000)
     public void calculateTotalDistance() throws ParseException {
        List<Profile> profiles = profileservice.getAllProfiles();
@@ -65,9 +65,9 @@ public class SpringEnableSchedulingExample {
 					    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                         Integer deviceid = car.getDeviceid();
                         String token = profile.getToken();
-                        for(int k=1; k<=210; k++){
+                        //for(int k=1; k<=210; k++){
                         	calendar = Calendar.getInstance();
-                        	calendar.add(Calendar.DATE, -k);
+                        	calendar.add(Calendar.DATE, -1);
                         	String date = sdf.format(calendar.getTime());
                         	Statistic statistic = carservice.getCarStatistic(deviceid, date, token);
                         	if(null != statistic && null != statistic.getCourse()){
@@ -76,7 +76,7 @@ public class SpringEnableSchedulingExample {
                     		  currentcar.setEmptyingtotaldistance(Double.valueOf(Math.round(statistic.getCourse()+currentcar.getEmptyingtotaldistance())));
                     		  carservice.updateCar(currentcar);
                         	}
-                        }
+                        //}
     			    }
     		    }
     	    }
