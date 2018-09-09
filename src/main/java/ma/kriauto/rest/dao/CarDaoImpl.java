@@ -72,7 +72,7 @@ public class CarDaoImpl implements CarDao {
 	     		+ ", minfridgetemperature = ?, maxfridgetemperature = ?, notiftechnicalcontroldate = ?, notifemptyingkilometre = ?"
 	     		+ ", notifinsuranceenddate = ?, notifmaxspeed = ?, notifmaxcourse = ?"  
 	     		+ ", notifminlevelfuel = ?, notifmaxenginetemperature = ?, notifminfridgetemperature = ?, notifautorisationcirculationenddate = ?"
-	     		+ ", notifmaxfridgetemperature = ?, emptyingkilometreindex = ?, autorisationcirculationenddate = ?, notifinzone = ?, notifoutzone = ?"   
+	     		+ ", notifmaxfridgetemperature = ?, emptyingkilometreindex = ?, autorisationcirculationenddate = ?, notifinzone = ?, notifoutzone = ?, inzone = ?"   
 	     		+ "  WHERE id = ?  "
 	     		, new Object[] { car.getAgencyid(), car.getImei(), car.getSimnumber()
 	     		, car.getImmatriculation(), car.getVin(), car.getMark(), car.getModel()
@@ -86,7 +86,7 @@ public class CarDaoImpl implements CarDao {
 	     		, car.getMinfridgetemperature(), car.getMaxfridgetemperature(), car.getNotiftechnicalcontroldate()
 	     		, car.getNotifemptyingkilometre(), car.getNotifinsuranceenddate(), car.getNotifmaxspeed(), car.getNotifmaxcourse()
 	     		, car.getNotifminlevelfuel(), car.getNotifmaxenginetemperature(), car.getNotifminfridgetemperature(), car.getNotifautorisationcirculationenddate()
-	     		, car.getNotifmaxfridgetemperature(), car.getEmptyingkilometreindex(), circulationdate, car.getNotifinzone(), car.getNotifoutzone()
+	     		, car.getNotifmaxfridgetemperature(), car.getEmptyingkilometreindex(), circulationdate, car.getNotifinzone(), car.getNotifoutzone(), car.getInzone()
 	     		, car.getId()});
 	}
 

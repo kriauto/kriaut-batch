@@ -421,10 +421,10 @@ public class SpringEnableSchedulingExample {
 	    				    }
 	    				    Notification notif = new Notification(car.getDeviceid().toString(), message);
 	    				    notificationservice.addNotification(notif);
+	    				    car.setInzone(false);
+		    				carservice.updateCar(car);
+		                    break;
 	                	 }
-	    				 car.setInzone(false);
-	    				 carservice.updateCar(car);
-	                     break;
 	                 }
 	                 
 	                 if(isInZone(car, location.getLatitude(), location.getLongitude()) == true){
@@ -438,10 +438,10 @@ public class SpringEnableSchedulingExample {
 	    				   }
 	    				   Notification notif = new Notification(car.getDeviceid().toString(), message);
 	    				   notificationservice.addNotification(notif);
+	    				   car.setInzone(true);
+		    			   carservice.updateCar(car);
+		                   break;
 	                	 }
-	    				 car.setInzone(true);
-	    				 carservice.updateCar(car);
-	                     break;
 	                 }
  			       }
  			     }
