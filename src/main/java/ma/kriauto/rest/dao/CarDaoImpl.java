@@ -72,7 +72,7 @@ public class CarDaoImpl implements CarDao {
 	     		+ ", minfridgetemperature = ?, maxfridgetemperature = ?, notiftechnicalcontroldate = ?, notifemptyingkilometre = ?"
 	     		+ ", notifinsuranceenddate = ?, notifmaxspeed = ?, notifmaxcourse = ?"  
 	     		+ ", notifminlevelfuel = ?, notifmaxenginetemperature = ?, notifminfridgetemperature = ?, notifautorisationcirculationenddate = ?"
-	     		+ ", notifmaxfridgetemperature = ?, emptyingkilometreindex = ?, autorisationcirculationenddate = ?, notifinzone = ?, notifoutzone = ?, inzone = ?"   
+	     		+ ", notifmaxfridgetemperature = ?, emptyingkilometreindex = ?, autorisationcirculationenddate = ?, notifinzone = ?, notifoutzone = ?, inzone = ?, emptyingtotaldistance = ?"   
 	     		+ "  WHERE id = ?  "
 	     		, new Object[] { car.getAgencyid(), car.getImei(), car.getSimnumber()
 	     		, car.getImmatriculation(), car.getVin(), car.getMark(), car.getModel()
@@ -86,7 +86,7 @@ public class CarDaoImpl implements CarDao {
 	     		, car.getMinfridgetemperature(), car.getMaxfridgetemperature(), car.getNotiftechnicalcontroldate()
 	     		, car.getNotifemptyingkilometre(), car.getNotifinsuranceenddate(), car.getNotifmaxspeed(), car.getNotifmaxcourse()
 	     		, car.getNotifminlevelfuel(), car.getNotifmaxenginetemperature(), car.getNotifminfridgetemperature(), car.getNotifautorisationcirculationenddate()
-	     		, car.getNotifmaxfridgetemperature(), car.getEmptyingkilometreindex(), circulationdate, car.getNotifinzone(), car.getNotifoutzone(), car.getInzone()
+	     		, car.getNotifmaxfridgetemperature(), car.getEmptyingkilometreindex(), circulationdate, car.getNotifinzone(), car.getNotifoutzone(), car.getInzone(), car.getEmptyingtotaldistance()
 	     		, car.getId()});
 	}
 
@@ -833,7 +833,7 @@ public class CarDaoImpl implements CarDao {
 				+ " from  positions ps "
 			    + " where ps.deviceid = ? "
 			    + " and   (ps.attributes like '%\"power\":0.0%' or ps.attributes like '%\"alarm\":\"lowBattery\"%') "
-				+ " and   to_char(ps.fixtime,'yyyy-MM-ss HH24:MI:SS')  >= ? ",new Object[] {deviceid, date}, new BeanPropertyRowMapper(Location.class));
+				+ " and   to_char(ps.fixtime,'yyyy-MM-dd HH24:MI:SS')  >= ? ",new Object[] {deviceid, date}, new BeanPropertyRowMapper(Location.class));
 		if(null != locations && locations.size() > 0){
 			return true;
 		}else{

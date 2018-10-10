@@ -50,7 +50,7 @@ public class SpringEnableSchedulingExample {
 	}
 	
 	/**** Empting kilometre * @throws ParseException ***/
-	@Scheduled(cron = "00 00 02 * * *")
+	@Scheduled(cron = "00 00 05 * * *")
 //	@Scheduled(fixedDelay = 3000)
     public void calculateTotalDistance() throws ParseException {
        List<Profile> profiles = profileservice.getAllProfiles();
@@ -65,7 +65,7 @@ public class SpringEnableSchedulingExample {
 					    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                         Integer deviceid = car.getDeviceid();
                         String token = profile.getToken();
-                        //for(int k=1; k<=210; k++){
+                        //for(int k=1; k<=270; k++){
                         	calendar = Calendar.getInstance();
                         	calendar.add(Calendar.DATE, -1);
                         	String date = sdf.format(calendar.getTime());
@@ -411,8 +411,28 @@ public class SpringEnableSchedulingExample {
 	              for(int k=0 ; k<locations.size() ; k++){
 	                 Location location = locations.get(k);
 	                 if(isInZone(car, location.getLatitude(), location.getLongitude()) == false){
-	                	 if((null == car.getInzone() || (null != car.getInzone() && car.getInzone() == true)) && null != car.getNotifoutzone() && car.getNotifoutzone() == true){
+	                	 if(null == car.getInzone() || (null != car.getInzone() && car.getInzone() == true)){
+	                		if(null != car.getNotifoutzone() && car.getNotifoutzone() == true){
 	                	    String message = "Sortie de zone virtuelle : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
+	                	     for(int v=0; v<notifications.size(); v++){
+	    					   Notification notification = notifications.get(v);
+	    					   if(null != notification && null != notification.getPushnotiftoken()){
+	    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
+	    					   }
+	    				     }
+	    				     Notification notif = new Notification(car.getDeviceid().toString(), message);
+	    				     notificationservice.addNotification(notif);
+	                		}
+	    				    car.setInzone(false);
+		    				carservice.updateCar(car);
+		                    break;
+	                	 }
+	                 }
+	                 
+	                 if(isInZone(car, location.getLatitude(), location.getLongitude()) == true){
+	                	 if(null == car.getInzone() || (null != car.getInzone() && car.getInzone() == false)){
+	                	   if(null != car.getNotifinzone() && car.getNotifinzone() == true){
+	                	    String message = "Entrée en zone virtuelle : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
 	                	    for(int v=0; v<notifications.size(); v++){
 	    					   Notification notification = notifications.get(v);
 	    					   if(null != notification && null != notification.getPushnotiftoken()){
@@ -421,23 +441,7 @@ public class SpringEnableSchedulingExample {
 	    				    }
 	    				    Notification notif = new Notification(car.getDeviceid().toString(), message);
 	    				    notificationservice.addNotification(notif);
-	    				    car.setInzone(false);
-		    				carservice.updateCar(car);
-		                    break;
-	                	 }
-	                 }
-	                 
-	                 if(isInZone(car, location.getLatitude(), location.getLongitude()) == true){
-	                	 if((null == car.getInzone() || (null != car.getInzone() && car.getInzone() == false))  && null != car.getNotifinzone() && car.getNotifinzone() == true){
-	                	   String message = "Entrée en zone virtuelle : "+car.getMark()+" "+car.getModel()+" "+car.getColor()+" ("+car.getImmatriculation()+")";
-	                	   for(int v=0; v<notifications.size(); v++){
-	    					   Notification notification = notifications.get(v);
-	    					   if(null != notification && null != notification.getPushnotiftoken()){
-	    					      senderservice.sendPushNotification(notification.getPushnotiftoken(), message);
-	    					   }
-	    				   }
-	    				   Notification notif = new Notification(car.getDeviceid().toString(), message);
-	    				   notificationservice.addNotification(notif);
+	                	   }
 	    				   car.setInzone(true);
 		    			   carservice.updateCar(car);
 		                   break;
